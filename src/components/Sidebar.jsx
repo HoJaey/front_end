@@ -22,7 +22,7 @@ export default function Sidebar({ page, setPage, darkMode, setDarkMode }) {
   const hoverNavBg = dm ? '#252525' : '#f5f5f5'
 
   return (
-    <aside style={{ width: 220, minHeight: '100vh', background: sideBg, borderRight: `1px solid ${borderColor}`, display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+    <aside style={{ width: '100%', height: '100%', background: sideBg, borderRight: `1px solid ${borderColor}`, display: 'flex', flexDirection: 'column' }}>
       {/* Logo */}
       <div onClick={() => setPage('dashboard')} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '20px 20px 16px', cursor: 'pointer' }}>
         <div style={{ width: 32, height: 32, background: '#10b981', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

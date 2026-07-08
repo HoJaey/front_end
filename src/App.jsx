@@ -38,9 +38,11 @@ export default function App() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: darkMode ? '#0f0f0f' : '#f5f5f5' }}>
-      <Sidebar page={page} setPage={setPage} darkMode={darkMode} setDarkMode={setDarkMode} />
-      <main style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-layout" style={{ background: darkMode ? '#0f0f0f' : '#f5f5f5' }}>
+      <aside className="app-sidebar">
+        <Sidebar page={page} setPage={setPage} darkMode={darkMode} setDarkMode={setDarkMode} />
+      </aside>
+      <main className="app-main">
         {pages[page] || pages.dashboard}
       </main>
     </div>

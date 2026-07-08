@@ -74,7 +74,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
       </div>
 
       {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 20 }}>
+      <div className="grid-stat">
         {[
           { label: `오늘 호재 ${tabLabel}`, value: `${bullNews}건`, color: '#ef4444', sub: '전일 대비 상승' },
           { label: `오늘 악재 ${tabLabel}`, value: `${bearNews}건`, color: '#3b82f6', sub: '전일 대비 하락' },
@@ -89,7 +89,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
       </div>
 
       {/* Bottom row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 16 }}>
+      <div className="grid-dashboard-bottom">
         {/* Top list */}
         <div style={{ background: card, borderRadius: 16, padding: '20px 24px', border: `1px solid ${border}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -126,7 +126,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
             <span style={{ fontWeight: 700, fontSize: 15, color: text1 }}>시장 히트맵</span>
             <button onClick={() => setPage('heatmap')} style={{ padding: '4px 12px', borderRadius: 8, fontSize: 12, border: `1px solid ${btnBorder}`, background: btnBg, cursor: 'pointer', color: btnColor }}>전체보기</button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+          <div className="grid-heatmap-preview">
             {heatData.map(s => <HeatTile key={s.id} stock={s} onClick={goStock} darkMode={dm} />)}
           </div>
         </div>

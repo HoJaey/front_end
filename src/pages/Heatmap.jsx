@@ -50,7 +50,7 @@ export default function Heatmap({ setPage, setSelectedStock, darkMode }) {
 
       {/* Grid */}
       <div style={{ background: card, borderRadius: 16, padding: '20px', border: `1px solid ${border}` }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 12 }}>
+        <div className="grid-heatmap">
           {sorted.map(s => {
             const intensity = Math.abs(s.score) / maxAbs
             const bg = s.score > 0

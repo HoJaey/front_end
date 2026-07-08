@@ -64,7 +64,7 @@ export default function Ranking({ setPage, setSelectedStock, darkMode }) {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div className="grid-ranking">
         <div style={{ background: card, borderRadius: 16, overflow: 'hidden', border: `1px solid ${border}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '16px 20px', borderBottom: `1px solid ${border}` }}>
             <span style={{ color: '#ef4444', fontSize: 13 }}>▲</span>
