@@ -1,9 +1,10 @@
-import { stocks } from '../data/mockData'
+import { useState } from 'react'
+import { getDataByTab } from '../data/mockData'
 
-const sorted = [...stocks].sort((a, b) => b.score - a.score)
-const maxAbs = Math.max(...stocks.map(s => Math.abs(s.score)))
+const TABS = ['코스피 종목', '환율', '해외지수']
 
 export default function Heatmap({ setPage, setSelectedStock, darkMode }) {
+  const [tab, setTab] = useState('코스피 종목')
   const dm = darkMode
   const card = dm ? '#1e1e1e' : '#fff'
   const border = dm ? 'rgba(255,255,255,0.06)' : '#f0f0f0'
@@ -14,6 +15,10 @@ export default function Heatmap({ setPage, setSelectedStock, darkMode }) {
   const tabInactiveBg = dm ? '#252525' : '#fff'
   const tabBorder = dm ? 'rgba(255,255,255,0.1)' : '#e5e7eb'
 
+  const data = getDataByTab(tab)
+  const sorted = [...data].sort((a, b) => b.score - a.score)
+  const maxAbs = Math.max(...data.map(s => Math.abs(s.score)), 1)
+
   function goStock(s) { setSelectedStock(s); setPage('stockdetail') }
 
   return (
@@ -21,12 +26,12 @@ export default function Heatmap({ setPage, setSelectedStock, darkMode }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: text1 }}>히트맵</h1>
         <div style={{ display: 'flex', gap: 6 }}>
-          {['코스피 종목', '환율', '해외지수'].map((t, i) => (
-            <button key={t} style={{
+          {TABS.map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{
               padding: '6px 16px', borderRadius: 8, fontSize: 13, cursor: 'pointer', border: '1px solid',
-              background: i === 0 ? tabActiveBg : tabInactiveBg,
-              color: i === 0 ? tabActiveColor : text2,
-              borderColor: i === 0 ? tabActiveBg : tabBorder,
+              background: tab === t ? tabActiveBg : tabInactiveBg,
+              color: tab === t ? tabActiveColor : text2,
+              borderColor: tab === t ? tabActiveBg : tabBorder,
             }}>{t}</button>
           ))}
         </div>

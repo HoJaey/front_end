@@ -1,8 +1,7 @@
-import { stocks } from '../data/mockData'
+import { useState } from 'react'
+import { getDataByTab } from '../data/mockData'
 
-const sorted = [...stocks].sort((a, b) => b.score - a.score)
-const bullRank = sorted.filter(s => s.score > 0).concat(sorted.filter(s => s.score <= 0))
-const bearRank = [...sorted].reverse()
+const TABS = ['코스피 종목', '환율', '해외지수']
 
 function Row({ rank, stock, onClick, dm }) {
   return (
@@ -31,6 +30,7 @@ function Row({ rank, stock, onClick, dm }) {
 }
 
 export default function Ranking({ setPage, setSelectedStock, darkMode }) {
+  const [tab, setTab] = useState('코스피 종목')
   const dm = darkMode
   const card = dm ? '#1e1e1e' : '#fff'
   const border = dm ? 'rgba(255,255,255,0.06)' : '#f0f0f0'
@@ -41,6 +41,11 @@ export default function Ranking({ setPage, setSelectedStock, darkMode }) {
   const tabInactiveBg = dm ? '#252525' : '#fff'
   const tabBorder = dm ? 'rgba(255,255,255,0.1)' : '#e5e7eb'
 
+  const data = getDataByTab(tab)
+  const sorted = [...data].sort((a, b) => b.score - a.score)
+  const bullRank = sorted.filter(s => s.score > 0)
+  const bearRank = sorted.filter(s => s.score < 0).reverse()
+
   function goStock(s) { setSelectedStock(s); setPage('stockdetail') }
 
   return (
@@ -48,34 +53,38 @@ export default function Ranking({ setPage, setSelectedStock, darkMode }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: text1 }}>랭킹</h1>
         <div style={{ display: 'flex', gap: 6 }}>
-          {['코스피 종목', '환율', '해외지수'].map((t, i) => (
-            <button key={t} style={{
+          {TABS.map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{
               padding: '6px 16px', borderRadius: 8, fontSize: 13, cursor: 'pointer', border: '1px solid',
-              background: i === 0 ? tabActiveBg : tabInactiveBg,
-              color: i === 0 ? tabActiveColor : text2,
-              borderColor: i === 0 ? tabActiveBg : tabBorder,
+              background: tab === t ? tabActiveBg : tabInactiveBg,
+              color: tab === t ? tabActiveColor : text2,
+              borderColor: tab === t ? tabActiveBg : tabBorder,
             }}>{t}</button>
           ))}
         </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        {/* Bull */}
         <div style={{ background: card, borderRadius: 16, overflow: 'hidden', border: `1px solid ${border}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '16px 20px', borderBottom: `1px solid ${border}` }}>
             <span style={{ color: '#ef4444', fontSize: 13 }}>▲</span>
             <span style={{ fontWeight: 700, color: '#ef4444', fontSize: 14 }}>호재 랭킹</span>
           </div>
-          {bullRank.map((s, i) => <Row key={s.id} rank={i + 1} stock={s} onClick={goStock} dm={dm} />)}
+          {bullRank.length === 0
+            ? <div style={{ padding: '32px', textAlign: 'center', color: dm ? '#555' : '#bbb', fontSize: 13 }}>호재 항목 없음</div>
+            : bullRank.map((s, i) => <Row key={s.id} rank={i + 1} stock={s} onClick={goStock} dm={dm} />)
+          }
         </div>
 
-        {/* Bear */}
         <div style={{ background: card, borderRadius: 16, overflow: 'hidden', border: `1px solid ${border}` }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '16px 20px', borderBottom: `1px solid ${border}` }}>
             <span style={{ color: '#3b82f6', fontSize: 13 }}>▼</span>
             <span style={{ fontWeight: 700, color: '#3b82f6', fontSize: 14 }}>악재 랭킹</span>
           </div>
-          {bearRank.map((s, i) => <Row key={s.id} rank={i + 1} stock={s} onClick={goStock} dm={dm} />)}
+          {bearRank.length === 0
+            ? <div style={{ padding: '32px', textAlign: 'center', color: dm ? '#555' : '#bbb', fontSize: 13 }}>악재 항목 없음</div>
+            : bearRank.map((s, i) => <Row key={s.id} rank={i + 1} stock={s} onClick={goStock} dm={dm} />)
+          }
         </div>
       </div>
     </div>

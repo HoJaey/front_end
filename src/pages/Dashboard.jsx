@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { bullTop, bearTop, stocks } from '../data/mockData'
+import { getDataByTab } from '../data/mockData'
 
 const TABS = ['코스피 종목', '환율', '해외지수']
 
@@ -28,7 +28,6 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
   const dm = darkMode
   const card = dm ? '#1e1e1e' : '#fff'
   const border = dm ? 'rgba(255,255,255,0.06)' : '#f0f0f0'
-  const border2 = dm ? 'rgba(255,255,255,0.06)' : '#f5f5f5'
   const text1 = dm ? '#f0f0f0' : '#111'
   const text2 = dm ? '#999' : '#555'
   const text3 = dm ? '#666' : '#888'
@@ -42,7 +41,17 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
   const btnColor = dm ? '#aaa' : '#555'
   const btnBorder = dm ? 'rgba(255,255,255,0.1)' : '#e5e7eb'
 
-  const heatStocks = [...stocks].sort((a, b) => b.score - a.score).slice(0, 8)
+  const data = getDataByTab(tab)
+  const sorted = [...data].sort((a, b) => b.score - a.score)
+  const bullList = sorted.filter(s => s.score > 0)
+  const bearList = sorted.filter(s => s.score < 0).reverse()
+  const heatData = sorted.slice(0, 8)
+
+  const totalNews = data.reduce((s, d) => s + d.news, 0)
+  const bullNews = bullList.reduce((s, d) => s + d.news, 0)
+  const bearNews = bearList.reduce((s, d) => s + d.news, 0)
+
+  const tabLabel = tab === '환율' ? '환율' : tab === '해외지수' ? '지수' : '종목'
 
   function goStock(s) { setSelectedStock(s); setPage('stockdetail') }
 
@@ -67,9 +76,9 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 20 }}>
         {[
-          { label: '오늘 호재 뉴스', value: '95건', color: '#ef4444', sub: '전일 대비 상승' },
-          { label: '오늘 악재 뉴스', value: '87건', color: '#3b82f6', sub: '전일 대비 하락' },
-          { label: '분석된 전체 뉴스', value: '182건', color: text1, sub: '최근 24시간' },
+          { label: `오늘 호재 ${tabLabel}`, value: `${bullNews}건`, color: '#ef4444', sub: '전일 대비 상승' },
+          { label: `오늘 악재 ${tabLabel}`, value: `${bearNews}건`, color: '#3b82f6', sub: '전일 대비 하락' },
+          { label: '분석된 전체 뉴스', value: `${totalNews}건`, color: text1, sub: '최근 24시간' },
         ].map(c => (
           <div key={c.label} style={{ background: card, borderRadius: 16, padding: '20px 24px', border: `1px solid ${border}` }}>
             <div style={{ fontSize: 13, color: text3, marginBottom: 10 }}>{c.label}</div>
@@ -81,7 +90,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
 
       {/* Bottom row */}
       <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 16 }}>
-        {/* Top 5 */}
+        {/* Top list */}
         <div style={{ background: card, borderRadius: 16, padding: '20px 24px', border: `1px solid ${border}` }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
             <span style={{ fontWeight: 700, fontSize: 15, color: text1 }}>호재 · 악재 Top 5</span>
@@ -90,7 +99,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: '#ef4444', marginBottom: 8 }}>호재 TOP</div>
-              {bullTop.slice(0, 5).map(s => (
+              {bullList.slice(0, 5).map(s => (
                 <div key={s.id} onClick={() => goStock(s)} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 4px', cursor: 'pointer', borderRadius: 6 }}
                   onMouseEnter={e => e.currentTarget.style.background = hoverBg} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                   <span style={{ fontSize: 13, color: text2 }}>{s.name}</span>
@@ -100,7 +109,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
             </div>
             <div>
               <div style={{ fontSize: 11, fontWeight: 700, color: '#3b82f6', marginBottom: 8 }}>악재 TOP</div>
-              {bearTop.slice(0, 5).map(s => (
+              {bearList.slice(0, 5).map(s => (
                 <div key={s.id} onClick={() => goStock(s)} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 4px', cursor: 'pointer', borderRadius: 6 }}
                   onMouseEnter={e => e.currentTarget.style.background = hoverBg} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                   <span style={{ fontSize: 13, color: text2 }}>{s.name}</span>
@@ -118,7 +127,7 @@ export default function Dashboard({ setPage, setSelectedStock, darkMode }) {
             <button onClick={() => setPage('heatmap')} style={{ padding: '4px 12px', borderRadius: 8, fontSize: 12, border: `1px solid ${btnBorder}`, background: btnBg, cursor: 'pointer', color: btnColor }}>전체보기</button>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-            {heatStocks.map(s => <HeatTile key={s.id} stock={s} onClick={goStock} darkMode={dm} />)}
+            {heatData.map(s => <HeatTile key={s.id} stock={s} onClick={goStock} darkMode={dm} />)}
           </div>
         </div>
       </div>
