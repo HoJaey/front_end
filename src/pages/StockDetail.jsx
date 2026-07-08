@@ -1,11 +1,21 @@
 import { useState } from 'react'
 
 const NEWS = [
-  { title: '삼성전자, 실적 기대감에 강세 시현', time: '오늘 09:12', type: 'bull' },
-  { title: '삼성전자 관련 훈풍… 외국인 순매수 전환', time: '오늘 11:45', type: 'bull' },
-  { title: '삼성전자, 목표주가 하향 조정', time: '어제 16:20', type: 'bear' },
-  { title: 'AI 반도체 수요 급증, 삼성전자 수혜 기대', time: '어제 14:05', type: 'bull' },
-  { title: '경쟁사 신제품 출시로 점유율 우려', time: '2일 전 09:30', type: 'bear' },
+  { title: '실적 기대감에 강세 시현, 기관 순매수 지속', time: '오늘 09:12', type: 'bull' },
+  { title: '외국인 순매수 전환… 반도체 업황 회복 기대', time: '오늘 11:45', type: 'bull' },
+  { title: '목표주가 하향 조정, 증권가 의견 엇갈려', time: '오늘 14:30', type: 'bear' },
+  { title: 'AI 반도체 수요 급증, 수혜 기대감 확산', time: '어제 09:05', type: 'bull' },
+  { title: '경쟁사 신제품 출시로 점유율 우려 제기', time: '어제 11:20', type: 'bear' },
+  { title: '3분기 영업이익 전망치 상향, 어닝 서프라이즈 기대', time: '어제 14:00', type: 'bull' },
+  { title: '글로벌 공급망 리스크 재부각, 생산 차질 우려', time: '어제 16:45', type: 'bear' },
+  { title: '메모리 반도체 가격 반등세 지속', time: '2일 전 09:30', type: 'bull' },
+  { title: '환율 급등으로 수출 채산성 악화 우려', time: '2일 전 13:10', type: 'bear' },
+  { title: '신규 파운드리 수주 소식, 중장기 성장 기대', time: '2일 전 15:55', type: 'bull' },
+  { title: '노조 파업 가능성 제기, 생산 일정 불확실', time: '3일 전 10:20', type: 'bear' },
+  { title: '미국 대형 빅테크와 HBM 공급 계약 체결', time: '3일 전 14:00', type: 'bull' },
+  { title: '반도체 규제 강화 우려로 투자 심리 위축', time: '4일 전 09:00', type: 'bear' },
+  { title: '자사주 매입 계획 발표, 주주 환원 확대', time: '4일 전 11:30', type: 'bull' },
+  { title: '중국 경쟁사 저가 공세 심화, 시장 점유율 압박', time: '5일 전 10:45', type: 'bear' },
 ]
 
 function MiniChart({ positive }) {
@@ -98,26 +108,31 @@ export default function StockDetail({ stock, setPage, darkMode }) {
       </div>
 
       {/* News timeline */}
-      <div style={{ background: card, borderRadius: 16, border: `1px solid ${border}`, overflow: 'hidden' }}>
-        <div style={{ padding: '16px 24px', borderBottom: `1px solid ${border2}`, fontWeight: 700, fontSize: 15, color: text1 }}>관련 뉴스 타임라인</div>
-        {NEWS.map((n, i) => (
-          <div key={i} style={{
-            display: 'flex', alignItems: 'center', padding: '14px 24px',
-            borderBottom: i < NEWS.length - 1 ? `1px solid ${border2}` : 'none',
-          }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-              background: n.type === 'bull' ? '#ef4444' : '#3b82f6', marginRight: 14,
-            }} />
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, color: text1 }}>{n.title}</div>
-              <div style={{ fontSize: 11, color: text3, marginTop: 3 }}>{n.time}</div>
+      <div style={{ background: card, borderRadius: 16, border: `1px solid ${border}`, overflow: 'hidden', marginBottom: 24 }}>
+        <div style={{ padding: '16px 24px', borderBottom: `1px solid ${border2}`, fontWeight: 700, fontSize: 15, color: text1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <span>관련 뉴스 타임라인</span>
+          <span style={{ fontSize: 12, fontWeight: 400, color: text3 }}>{NEWS.length}건</span>
+        </div>
+        <div style={{ maxHeight: 360, overflowY: 'auto' }}>
+          {NEWS.map((n, i) => (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', padding: '14px 24px',
+              borderBottom: i < NEWS.length - 1 ? `1px solid ${border2}` : 'none',
+            }}>
+              <span style={{
+                width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+                background: n.type === 'bull' ? '#ef4444' : '#3b82f6', marginRight: 14,
+              }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, color: text1 }}>{n.title}</div>
+                <div style={{ fontSize: 11, color: text3, marginTop: 3 }}>{n.time}</div>
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: n.type === 'bull' ? '#ef4444' : '#3b82f6', flexShrink: 0, marginLeft: 12 }}>
+                {n.type === 'bull' ? '호재' : '악재'}
+              </span>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: n.type === 'bull' ? '#ef4444' : '#3b82f6' }}>
-              {n.type === 'bull' ? '호재' : '악재'}
-            </span>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   )
