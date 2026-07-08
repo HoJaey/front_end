@@ -11,6 +11,7 @@ import StockDetail from './pages/StockDetail'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import FloatingChat from './components/FloatingChat'
 
 export default function App() {
   const [page, setPage] = useState('login')
@@ -45,6 +46,7 @@ export default function App() {
       <main className="app-main">
         {pages[page] || pages.dashboard}
       </main>
+      <FloatingChat darkMode={darkMode} />
     </div>
   )
 }
